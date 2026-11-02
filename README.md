@@ -26,7 +26,26 @@ Ouvrir ensuite `http://localhost:8000`.
 
 Le coffre utilise PBKDF2-SHA256 et AES-GCM grâce à Web Crypto. Le mot de passe n'est pas enregistré et ne peut pas être récupéré. Les données du journal restent dans le stockage local du navigateur ; elles ne font pas partie du dépôt GitHub.
 
+## Application iOS avec Capacitor
+
+Le dépôt contient un projet iOS Capacitor utilisant l'identifiant :
+
+```text
+com.technova.journalnovembre
+```
+
+Pour resynchroniser le site avec le projet iOS :
+
+```bash
+npm ci
+npx cap sync ios
+```
+
 ## Codemagic
 
-Cette version est une application web responsive. Elle pourra être emballée avec Capacitor dans une prochaine étape afin de produire une véritable application iOS avec Codemagic.
+Le fichier `codemagic.yaml` contient deux workflows :
 
+- `ios-simulator` : construit une application pour le simulateur sans signature Apple ;
+- `ios-release` : produit une IPA signée pour TestFlight ou l'App Store.
+
+Pour utiliser `ios-release`, ajouter dans Codemagic un certificat Apple Distribution et un profil App Store correspondant à `com.technova.journalnovembre`. Un abonnement Apple Developer actif est nécessaire pour signer et distribuer l'application.

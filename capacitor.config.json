@@ -1,0 +1,8 @@
+{
+  "appId": "com.technova.journalnovembre",
+  "appName": "Journal Novembre",
+  "webDir": "dist",
+  "server": {
+    "iosScheme": "capacitor"
+  }
+}

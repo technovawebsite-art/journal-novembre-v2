@@ -3,4 +3,6 @@ Thumbs.db
 *.log
 *.jnv2
 node_modules/
-
+build/
+ios/App/Pods/
+ios/DerivedData/

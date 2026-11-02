@@ -43,4 +43,3 @@ $('#importInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{
 $('#deleteVault').onclick=()=>{const check=prompt('Cette action est irréversible. Écris EFFACER pour confirmer.');if(check==='EFFACER'){localStorage.removeItem('jn-vault-v2');lock();toast('Journal effacé')}};
 function toast(msg){$('#toast').textContent=msg;$('#toast').classList.add('show');setTimeout(()=>$('#toast').classList.remove('show'),2500)}
 setupLock();
-
