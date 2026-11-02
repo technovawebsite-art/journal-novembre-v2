@@ -1,4 +1,40 @@
 workflows:
+  ios-altstore:
+    name: Journal Novembre - IPA gratuite AltStore
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Installer les dépendances
+        script: npm ci
+      - name: Synchroniser Capacitor
+        script: npx cap sync ios
+      - name: Construire l'application iPhone sans signature
+        script: |
+          xcodebuild archive \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -archivePath "$CM_BUILD_DIR/build/JournalNovembre.xcarchive" \
+            -destination "generic/platform=iOS" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM=""
+      - name: Créer l'IPA pour AltStore
+        script: |
+          rm -rf "$CM_BUILD_DIR/build/Payload"
+          mkdir -p "$CM_BUILD_DIR/build/Payload"
+          cp -R "$CM_BUILD_DIR/build/JournalNovembre.xcarchive/Products/Applications/App.app" \
+            "$CM_BUILD_DIR/build/Payload/JournalNovembre.app"
+          cd "$CM_BUILD_DIR/build"
+          zip -qry Journal-Novembre-AltStore.ipa Payload
+    artifacts:
+      - build/Journal-Novembre-AltStore.ipa
+      - /tmp/xcodebuild_logs/*.log
+
   ios-simulator:
     name: Journal Novembre - simulateur iPhone
     instance_type: mac_mini_m2
