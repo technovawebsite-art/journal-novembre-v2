@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="theme-color" content="#27170f">
+  <meta name="description" content="Journal intime local et chiffré">
+  <title>Journal Novembre</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="privacy.css">
+</head>
+<body>
+  <div class="forest" aria-hidden="true"></div>
+  <section id="lockScreen" class="lock-screen">
+    <div class="lock-card glass">
+      <div class="brand-mark">JN</div>
+      <p class="eyebrow">MON ESPACE PRIVÉ</p>
+      <h1>Journal Novembre</h1>
+      <p id="lockIntro" class="muted">Crée un mot de passe pour protéger ton journal sur cet appareil.</p>
+      <form id="unlockForm">
+        <label for="password">Mot de passe</label>
+        <div class="password-row"><input id="password" type="password" minlength="8" autocomplete="current-password" required><button type="button" id="showPassword" class="icon-btn" aria-label="Afficher le mot de passe">◉</button></div>
+        <label id="confirmLabel" for="confirmPassword">Confirmer le mot de passe</label>
+        <input id="confirmPassword" type="password" minlength="8" autocomplete="new-password">
+        <p id="lockError" class="error" role="alert"></p>
+        <button class="primary wide" type="submit" id="unlockButton">Créer mon journal</button>
+      </form>
+      <p class="security-note">🔒 Chiffrement AES-GCM local. Aucun mot de passe n’est envoyé ni conservé.</p>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar glass">
+      <div class="logo"><span>JN</span><div><strong>Journal</strong><small>Novembre</small></div></div>
+      <nav id="nav">
+        <button data-view="today" class="active">✦ Aujourd’hui</button>
+        <button data-view="calendar">▦ Calendrier</button>
+        <button data-view="memories">⌕ Souvenirs</button>
+        <button data-view="stats">◒ Statistiques</button>
+        <button data-view="goals">✓ Mes objectifs</button>
+        <button data-view="settings">⚙ Sécurité</button>
+      </nav>
+      <div class="sidebar-bottom"><button id="lockButton">⌁ Verrouiller</button><small>Stockage chiffré sur cet appareil</small></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><button id="menuButton" class="menu-btn" aria-label="Menu">☰</button><div><p id="dateLine" class="eyebrow"></p><h2 id="viewTitle">Bonjour 👋</h2></div><div class="header-actions"><button id="quickSearch" class="icon-btn" aria-label="Rechercher">⌕</button><div class="avatar">M</div></div></header>
+
+      <section id="view-today" class="view active">
+        <div class="hero glass"><div><span class="leaf">🍂</span><p class="eyebrow">TON MOMENT À TOI</p><h3>Comment s’est passée ta journée ?</h3><p>Pose ici ce que tu veux garder, comprendre ou simplement laisser partir.</p></div><button id="newEntryHero" class="primary">+ Nouveau souvenir</button></div>
+        <div class="section-head"><div><p class="eyebrow">HUMEUR DU JOUR</p><h3>Comment te sens-tu ?</h3></div></div>
+        <div id="moodPicker" class="mood-picker"></div>
+        <div class="section-head"><div><p class="eyebrow">DERNIERS SOUVENIRS</p><h3>Ton journal récent</h3></div><button id="seeAll" class="text-btn">Tout voir →</button></div>
+        <div id="recentEntries" class="entry-grid"></div>
+      </section>
+
+      <section id="view-calendar" class="view"><div class="panel glass"><div class="calendar-head"><button id="prevMonth">←</button><h3 id="calendarMonth"></h3><button id="nextMonth">→</button></div><div class="weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div><div id="calendarGrid" class="calendar-grid"></div></div><div id="calendarEntries" class="entry-grid"></div></section>
+
+      <section id="view-memories" class="view"><div class="search-box glass"><span>⌕</span><input id="searchInput" placeholder="Rechercher un mot, une émotion, une activité…"><select id="moodFilter"><option value="">Toutes les humeurs</option></select></div><div id="allEntries" class="entry-grid"></div></section>
+
+      <section id="view-stats" class="view"><div id="statCards" class="stats-grid"></div><div class="chart-layout"><div class="panel glass"><h3>Tes humeurs</h3><div id="moodChart" class="mood-chart"></div></div><div class="panel glass"><h3>7 derniers jours</h3><div id="weekChart" class="week-chart"></div></div></div></section>
+
+      <section id="view-goals" class="view"><div class="panel glass"><div class="section-head"><div><p class="eyebrow">PETITS PAS</p><h3>Activités et objectifs</h3></div><button id="addGoal" class="primary">+ Ajouter</button></div><form id="goalForm" class="inline-form hidden"><input id="goalText" maxlength="80" placeholder="Ex. écrire 3 fois cette semaine" required><button class="primary">Ajouter</button></form><div id="goalList" class="goal-list"></div></div></section>
+
+      <section id="view-settings" class="view"><div class="settings-grid"><div class="panel glass"><p class="eyebrow">SAUVEGARDE</p><h3>Garder une copie sûre</h3><p>Le fichier exporté reste chiffré avec ton mot de passe actuel.</p><div class="button-row"><button id="exportButton" class="primary">Exporter</button><label class="secondary file-label">Importer<input id="importInput" type="file" accept="application/json,.jnv2" hidden></label></div></div><div class="panel glass"><p class="eyebrow">CONFIDENTIALITÉ</p><h3>Protection automatique</h3><label class="toggle-row"><span>Verrouiller après 5 minutes d’inactivité</span><input id="autoLockToggle" type="checkbox" checked></label><button id="deleteVault" class="danger">Effacer définitivement le journal</button></div></div><div class="panel glass safety"><h3>Ce que protège cette version</h3><p>Les textes, photos, humeurs et objectifs sont chiffrés avant le stockage local. Les données sont déverrouillées seulement en mémoire pendant la session.</p><p><strong>Limite :</strong> un appareil compromis ou un mot de passe faible peut réduire cette protection. Il n’existe aucune récupération du mot de passe.</p></div></section>
+    </main>
+  </div>
+
+  <dialog id="entryDialog">
+    <form id="entryForm" method="dialog" class="dialog-card">
+      <div class="dialog-head"><div><p class="eyebrow">NOUVEAU SOUVENIR</p><h3 id="dialogTitle">Écrire ma journée</h3></div><button type="button" id="closeDialog" class="icon-btn">×</button></div>
+      <input id="entryId" type="hidden"><label for="entryDate">Date</label><input id="entryDate" type="date" required><label for="entryTitle">Titre</label><input id="entryTitle" maxlength="100" placeholder="Un moment à retenir…" required><label>Humeur</label><div id="entryMood" class="mood-picker compact"></div><label for="entryContent">Mon souvenir</label><textarea id="entryContent" rows="8" maxlength="10000" placeholder="Écris librement…" required></textarea><label for="entryTags">Activités ou mots-clés</label><input id="entryTags" maxlength="150" placeholder="famille, école, promenade"><label class="photo-label">Ajouter une photo (max. 2 Mo)<input id="entryPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label><img id="photoPreview" class="photo-preview hidden" alt="Aperçu"><div class="dialog-actions"><button type="button" id="deleteEntry" class="danger hidden">Supprimer</button><span></span><button type="button" id="cancelEntry" class="secondary">Annuler</button><button type="submit" class="primary">Enregistrer</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
+
